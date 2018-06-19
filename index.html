@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta content='initial-scale=1.0, maximum-scale=1.0, width=device-width, target-densitydpi=device-dpi, user-scalable=0' name='viewport' />
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script lang="javascript">
+function resizeimg(selector) {
+$("img").each(function() {
+    var img = $(this)
+    // w = r * h
+    // h = w / r
+    var imgratio = img.width() / img.height()
+
+    var width = window.innerWidth;
+    var height = width / imgratio;
+
+    if (height > window.innerHeight) {
+        height = window.innerHeight;
+        width = height * imgratio;
+    }
+    img.css("height", height + "px")
+    img.css("width", width + "px")
+})
+}
+
+
+function flash() {
+    $("#flasher").css("opacity", "1")
+    $("#flasher").fadeTo(150, 0, () => {
+        $("#flasher").css("opacity", "1")
+        $("#flasher").fadeTo(150, 0)
+    })
+}
+
+
+function fadeinout(duration) {
+    var fadein = function() {
+        if (fadeinout.enabled) $("#flasher").fadeTo(duration, 1, fadeout)
+        else $("#flasher").css("opacity", "0")
+    }
+    var fadeout = function() {
+        if (fadeinout.enabled) $("#flasher").fadeTo(duration, 0, fadein)
+        else $("#flasher").css("opacity", "0")
+    }
+    $("#flasher").css("opacity", "0")
+    fadein();
+}
+
+function playbgm(bgm) {
+    const elem = $("#bgm").get(0)
+    elem.src = bgm
+    elem.play()
+}
+
+function begin() {
+    fadeinout.enabled = true;
+    fadeinout(200)
+    playbgm("bgm.mp3")
+    $("#begin").fadeOut(3000, () => {
+        fadeinout.enabled = false;
+        $("#battle").fadeIn(2000)
+    })
+}
+var img = 1, totalimgs = 23
+
+function nextimg() {
+    img++;
+    if (img <= totalimgs) {
+        $("#img").get(0).src = img + ".png"
+    }
+    
+    if (img === 21) {
+        fadeinout.enabled = true
+        fadeinout(500)
+    } else {
+        fadeinout.enabled = false
+    }
+    if ([7,9,13,15,17,22].indexOf(img) >= 0) {
+        flash()
+    }
+    
+    if (img === 19) {
+        playbgm("victory.mp3")
+    }
+    if (img === 20) {
+        playbgm("evolution.mp3")
+    }
+    if (img === 22) {
+        playbgm("evolutionend.mp3")
+    }
+}
+</script> 
+<style>
+#flasher {
+    position: fixed; 
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    background-color: white; 
+    z-index: 10;
+    pointer-events: none;
+}
+</style>
+</head>
+
+<body onload="resizeimg()" onresize="resizeimg()">
+
+<audio id="bgm" src="bgm.mp3" preload="auto"></audio>
+<span id="flasher" style="opacity: 0"></span>
+<div id="begin" onclick="begin()" style="text-align: center">
+    <img id="img0" src="start.png" width="100%"/>
+    
+</div>
+<div id="battle" style="display: none; text-align: center;" onclick="nextimg()">
+    <img id="img" src="1.png" width="556px" height="371px"/>
+    <span id="flasher" style="opacity: 0;"></span>
+</div>
+
+</body>
+</html>
