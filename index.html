@@ -76,16 +76,20 @@ function fadeinout(duration) {
     fadein();
 }
 
+var currentbgm;
+
 function playbgm(bgm) {
-    const elem = $("#bgm").get(0)
-    elem.src = bgm
-    elem.play()
+    if (currentbgm) {
+        currentbgm.pause();
+    }
+    currentbgm = $("#" + bgm).get(0)
+    currentbgm.play()
 }
 
 function begin() {
     fadeinout.enabled = true;
     fadeinout(200)
-    playbgm("bgm.mp3")
+    playbgm("bgm")
     $("#begin").fadeOut(3000, () => {
         fadeinout.enabled = false;
         $("#battle").fadeIn(2000)
@@ -110,13 +114,13 @@ function nextimg() {
     }
     
     if (img === 19) {
-        playbgm("victory.mp3")
+        playbgm("victory")
     }
     if (img === 20) {
-        playbgm("evolution.mp3")
+        playbgm("evolution")
     }
     if (img === 22) {
-        playbgm("evolutionend.mp3")
+        playbgm("evolutionend")
     }
 }
 </script> 
@@ -137,6 +141,10 @@ function nextimg() {
 <body onload="resizeimg()" onresize="resizeimg()">
 
 <audio id="bgm" src="bgm.mp3" preload="auto"></audio>
+<audio id="evolution" src="evolution.mp3" preload="auto"></audio>
+<audio id="evolutionend" src="evolutionend.mp3" preload="auto"></audio>
+<audio id="victory" src="victory.mp3" preload="auto"></audio>
+
 <span id="flasher" style="opacity: 0"></span>
 <div id="begin" onclick="begin()" style="text-align: center">
     <img id="img0" src="start.png" width="100%"/>
