@@ -47,7 +47,10 @@ function preloadmp3() {
             audio.src = URL.createObjectURL(xhr.response);
 
             if (++loaded === $("audio").length) {
-                $("#begin").on("click", begin);
+                $("#loading").css("display", "none")
+                $("#begin").css("display", "block")
+                resizeimg()
+                $("#begin").on("click", begin)
             }
         };
         xhr.send();
@@ -160,7 +163,7 @@ function nextimg() {
 </style>
 </head>
 
-<body onload="resizeimg(); preloadmp3()" onresize="resizeimg()">
+<body onload="preloadmp3()" onresize="resizeimg()">
 
 <audio id="bgm" src="bgm.mp3" preload="none"></audio>
 <audio id="evolution" src="evolution.mp3" preload="none"></audio>
@@ -168,7 +171,8 @@ function nextimg() {
 <audio id="victory" src="victory.mp3" preload="none"></audio>
 
 <span id="flasher" style="opacity: 0"></span>
-<div id="begin" style="text-align: center">
+<div id="loading">Loading...</div>
+<div id="begin" style="text-align: center; display: none">
     <img id="img0" src="start.png" width="100%"/>
     
 </div>
