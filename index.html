@@ -33,6 +33,28 @@
 <link rel="preload" as="audio" href="victory.mp3"/>
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+function preloadmp3() {
+    var loaded = 0;
+    $("audio").each(function() {
+        var audio = $(this).get(0);
+        console.log("Preloading blob for", audio.id);
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', audio.id + '.mp3', true);
+        xhr.responseType = 'blob';
+        xhr.onload = function () {
+            console.log("Completed preloading blob for", audio.id);
+            audio.src = URL.createObjectURL(xhr.response);
+
+            if (++loaded === $("audio").length) {
+                $("#begin").on("click", begin);
+            }
+        };
+        xhr.send();
+    })
+}
+</script>
+
 <script lang="javascript">
 function resizeimg(selector) {
 $("img").each(function() {
@@ -72,6 +94,7 @@ function fadeinout(duration) {
         if (fadeinout.enabled) $("#flasher").fadeTo(duration, 0, fadein)
         else $("#flasher").css("opacity", "0")
     }
+    fadeinout.enabled = true;
     $("#flasher").css("opacity", "0")
     fadein();
 }
@@ -87,7 +110,7 @@ function playbgm(bgm) {
 }
 
 function begin() {
-    fadeinout.enabled = true;
+    $("#begin").off("click");
     fadeinout(200)
     playbgm("bgm")
     $("#begin").fadeOut(3000, () => {
@@ -104,12 +127,11 @@ function nextimg() {
     }
     
     if (img === 21) {
-        fadeinout.enabled = true
         fadeinout(500)
     } else {
         fadeinout.enabled = false
     }
-    if ([7,9,13,15,17,22].indexOf(img) >= 0) {
+    if ([7,9,13,15,17].indexOf(img) >= 0) {
         flash()
     }
     
@@ -138,15 +160,15 @@ function nextimg() {
 </style>
 </head>
 
-<body onload="resizeimg()" onresize="resizeimg()">
+<body onload="resizeimg(); preloadmp3()" onresize="resizeimg()">
 
-<audio id="bgm" src="bgm.mp3" preload="auto"></audio>
-<audio id="evolution" src="evolution.mp3" preload="auto"></audio>
-<audio id="evolutionend" src="evolutionend.mp3" preload="auto"></audio>
-<audio id="victory" src="victory.mp3" preload="auto"></audio>
+<audio id="bgm" src="bgm.mp3" preload="none"></audio>
+<audio id="evolution" src="evolution.mp3" preload="none"></audio>
+<audio id="evolutionend" src="evolutionend.mp3" preload="none"></audio>
+<audio id="victory" src="victory.mp3" preload="none"></audio>
 
 <span id="flasher" style="opacity: 0"></span>
-<div id="begin" onclick="begin()" style="text-align: center">
+<div id="begin" style="text-align: center">
     <img id="img0" src="start.png" width="100%"/>
     
 </div>
