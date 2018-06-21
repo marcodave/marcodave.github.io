@@ -74,14 +74,16 @@ $("img").each(function() {
 }
 
 
-function flash() {
+function flash(duration, repeat) {
+    duration = duration || 150;
     $("#flasher").css("opacity", "1")
-    $("#flasher").fadeTo(150, 0, () => {
-        $("#flasher").css("opacity", "1")
-        $("#flasher").fadeTo(150, 0)
+    $("#flasher").fadeTo(duration, 0, () => {
+        if (repeat) {
+            $("#flasher").css("opacity", "1")
+            $("#flasher").fadeTo(duration, 0)
+        }
     })
 }
-
 
 function fadeinout(duration) {
     var fadein = function() {
@@ -130,7 +132,7 @@ function nextimg() {
         fadeinout.enabled = false
     }
     if ([7,9,13,15,17].indexOf(img) >= 0) {
-        flash()
+        flash(150, true)
     }
     
     if (img === 19) {
@@ -140,6 +142,7 @@ function nextimg() {
         playbgm("evolution")
     }
     if (img === 22) {
+        flash(750)
         playbgm("evolutionend")
     }
 }
