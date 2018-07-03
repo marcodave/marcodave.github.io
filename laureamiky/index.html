@@ -3,6 +3,7 @@
 <head>
 <meta content='initial-scale=1.0, maximum-scale=1.0, width=device-width, target-densitydpi=device-dpi, user-scalable=0' name='viewport' />
 <link rel="preload" as="image" href="start.png"/>
+<link rel="preload" as="image" href="end.png"/>
 <link rel="preload" as="image" href="1.png"/>
 <link rel="preload" as="image" href="2.png"/>
 <link rel="preload" as="image" href="3.png"/>
@@ -120,12 +121,22 @@ function begin() {
         $("#battle").fadeIn(2000)
     })
 }
+
+function end() {
+    $("#battle").fadeOut(4000, () => {
+        $("#img0").get(0).src = "end.png"
+        $("#begin").fadeIn(2000);
+    })
+}
+
 var img = 1, totalimgs = 23
 
 function nextimg() {
     img++;
     if (img <= totalimgs) {
         $("#img").get(0).src = img + ".png"
+    } else {
+        end()
     }
     
     if (img === 21) {
